@@ -62,9 +62,14 @@ Parameters: list of strs ; dict mapping strs to strs
 Returns: list of strs
 '''
 def generateProtein(codons, codonD):
-    return
-
-
+    protein=[]
+    if codons[0]=='AUG':
+        protein.append('Start')
+    for i in range(1,len(codons)):
+        if codons[i] in codonD.keys():
+            protein.append(codonD[codons[i]])
+    return protein
+ 
 '''
 synthesizeProteins(dnaFilename, codonFilename)
 #5 [Check6-1]
@@ -72,8 +77,24 @@ Parameters: str ; str
 Returns: 2D list of strs
 '''
 def synthesizeProteins(dnaFilename, codonFilename):
-    return
-
+    count = 0
+    proteins=[]
+    file1 = readFile(dnaFilename)
+    file2 = makeCodonDictionary(codonFilename)
+    i=0
+    while i < len(file1):
+        if file1[i:i+3] == "ATG":
+            dna= dnaToRna(file1, i)
+            # print(dna)
+            protein1 = generateProtein(dna,file2)
+            # print(protein1)
+            proteins.append(protein1)
+            i = i+3*len(dna)
+        else:
+            i = i+1
+            count = count+1
+            # print(count)
+    return proteins
 
 def runWeek1():
     print("Human DNA")
@@ -206,7 +227,8 @@ if __name__ == "__main__":
     # runWeek1()
     # test.testReadFile()
     # test.testDnaToRna()
-    test.testMakeCodonDictionary()
+    # test.testMakeCodonDictionary()
+    test.testSynthesizeProteins()
     ## Uncomment these for Week 2 ##
     """
     print("\n" + "#"*15 + " WEEK 2 TESTS " +  "#" * 16 + "\n")
