@@ -127,9 +127,14 @@ combineProteins(proteinList)
 Parameters: 2D list of strs
 Returns: list of strs
 '''
-def combineProteins(proteinList):
-    return
 
+def combineProteins(proteinList):
+    list1=[]
+    for i in proteinList:
+        for j in i:
+            if i not in list1:
+                list1.append(j)
+    return list1
 
 '''
 aminoAcidDictionary(aaList)
@@ -235,7 +240,8 @@ if __name__ == "__main__":
     # test.testDnaToRna()
     # test.testMakeCodonDictionary()
     # test.testSynthesizeProteins()
-    test.testCommonProteins()
+    # test.testCommonProteins()
+    test.testCombineProteins()
     ## Uncomment these for Week 2 ##
     """
     print("\n" + "#"*15 + " WEEK 2 TESTS " +  "#" * 16 + "\n")
