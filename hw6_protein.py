@@ -93,7 +93,9 @@ def synthesizeProteins(dnaFilename, codonFilename):
         else:
             i = i+1
             count = count+1
-            # print(count)
+    print("Unused bases are : ", count)
+    print("Total Bases are : ", len(file1))
+    print("Proteins count are : ", len(proteins)) 
     return proteins
 
 def runWeek1():
@@ -358,4 +360,3 @@ if __name__ == "__main__":
     test.week3Tests()
     print("\n" + "#"*15 + " WEEK 3 OUTPUT " + "#" * 15 + "\n")
     runFullProgram()
-    
