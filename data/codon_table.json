@@ -20,5 +20,5 @@
     "Glu" : [ "GAA", "GAG" ],
     "Gly" : [ "GGT", "GGC", "GGA", "GGG" ],
 
-    "Stop" : [ "TAA", "TAG", "TGA" ]
+    "Stop" : [ "TAA", "TAG", "TGA" ] 
 }
