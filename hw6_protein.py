@@ -158,9 +158,39 @@ findAminoAcidDifferences(proteinList1, proteinList2, cutoff)
 Parameters: 2D list of strs ; 2D list of strs ; float
 Returns: 2D list of values
 '''
-def findAminoAcidDifferences(proteinList1, proteinList2, cutoff):
-    return
 
+def findAminoAcidDifferences(proteinList1, proteinList2, cutoff):
+    lst1=combineProteins(proteinList1)
+    lst2=combineProteins(proteinList2)
+    dict1=aminoAcidDictionary(lst1)
+    dict2=aminoAcidDictionary(lst2)
+    freq1={}
+    freq2={}
+    x=[]
+    # frequency1=0
+    # frequency2=0
+    final_diff=[]
+    for i in dict1:
+        freq1[i]=dict1[i]/len(lst1)
+        if i not in x and i!='Start' and i!='Stop':
+            x.append(i)
+    for j in dict2:
+        freq2[j]=dict2[j]/len(lst2)
+        if j not in x and j!='Start' and j!='Stop':
+            x.append(j)
+    # print(dict1,len(dict1),"f1")
+    # print(dict2,len(dict2),"f2")
+    for k in x:
+        frequency1=0
+        frequency2=0
+        if k in freq1:
+            frequency1=freq1[k]
+        if k in freq2:
+            frequency2=freq2[k]
+        diff=frequency2-frequency1
+        if diff > cutoff or diff< -cutoff:
+            final_diff.append([k,frequency1,frequency2])
+    return final_diff
 
 '''
 displayTextResults(commonalities, differences)
@@ -248,7 +278,8 @@ if __name__ == "__main__":
     # test.testSynthesizeProteins()
     # test.testCommonProteins()
     # test.testCombineProteins()
-    test.testAminoAcidDictionary()
+    # test.testAminoAcidDictionary()
+    test.testFindAminoAcidDifferences()
     ## Uncomment these for Week 2 ##
     """
     print("\n" + "#"*15 + " WEEK 2 TESTS " +  "#" * 16 + "\n")
