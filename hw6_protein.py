@@ -127,9 +127,14 @@ combineProteins(proteinList)
 Parameters: 2D list of strs
 Returns: list of strs
 '''
-def combineProteins(proteinList):
-    return
 
+def combineProteins(proteinList):
+    list1=[]
+    for i in proteinList:
+        for j in i:
+            if i not in list1:
+                list1.append(j)
+    return list1
 
 '''
 aminoAcidDictionary(aaList)
@@ -138,7 +143,13 @@ Parameters: list of strs
 Returns: dict mapping strs to ints
 '''
 def aminoAcidDictionary(aaList):
-    return
+    dict1={}
+    for i in aaList:
+        if i in dict1:
+            dict1[i] = dict1[i] + 1
+        else:
+            dict1[i] = 1
+    return dict1
 
 
 '''
@@ -147,9 +158,39 @@ findAminoAcidDifferences(proteinList1, proteinList2, cutoff)
 Parameters: 2D list of strs ; 2D list of strs ; float
 Returns: 2D list of values
 '''
-def findAminoAcidDifferences(proteinList1, proteinList2, cutoff):
-    return
 
+def findAminoAcidDifferences(proteinList1, proteinList2, cutoff):
+    lst1=combineProteins(proteinList1)
+    lst2=combineProteins(proteinList2)
+    dict1=aminoAcidDictionary(lst1)
+    dict2=aminoAcidDictionary(lst2)
+    freq1={}
+    freq2={}
+    x=[]
+    # frequency1=0
+    # frequency2=0
+    final_diff=[]
+    for i in dict1:
+        freq1[i]=dict1[i]/len(lst1)
+        if i not in x and i!='Start' and i!='Stop':
+            x.append(i)
+    for j in dict2:
+        freq2[j]=dict2[j]/len(lst2)
+        if j not in x and j!='Start' and j!='Stop':
+            x.append(j)
+    # print(dict1,len(dict1),"f1")
+    # print(dict2,len(dict2),"f2")
+    for k in x:
+        frequency1=0
+        frequency2=0
+        if k in freq1:
+            frequency1=freq1[k]
+        if k in freq2:
+            frequency2=freq2[k]
+        diff=frequency2-frequency1
+        if diff > cutoff or diff< -cutoff:
+            final_diff.append([k,frequency1,frequency2])
+    return final_diff
 
 '''
 displayTextResults(commonalities, differences)
@@ -158,8 +199,25 @@ Parameters: 2D list of strs ; 2D list of values
 Returns: None
 '''
 def displayTextResults(commonalities, differences):
+    print("The following proteins occurred in both DNA Sequences:")
+    for i in commonalities:
+        cproteins=""
+        lst=i[1:(len(i)-1)]
+        count=0
+        for j in lst:
+            cproteins+=j
+            count+=1
+            if count!=len(lst):
+                cproteins+="-"
+        if len(cproteins)!=0:
+            print(cproteins)
+    print("The following amino acids occurred at very different rates in the two DNA sequences:")
+    for i in differences:
+        a=i[0]
+        freq1=round(i[1]*100,2)
+        freq2=round(i[2]*100,2)
+        print(str(a)+" "+str(freq1)+" % in Seq1"+","+str(freq2)+"% in Seq2")
     return
-
 
 def runWeek2():
     humanProteins = synthesizeProteins("data/human_p53.txt", "data/codon_table.json")
@@ -179,8 +237,19 @@ Parameters: 2D list of strs ; 2D list of strs
 Returns: list of strs
 '''
 def makeAminoAcidLabels(proteinList1, proteinList2):
-    return
-
+    gene=[]
+    list1=combineProteins(proteinList1)
+    list2=combineProteins(proteinList2)
+    dict_1=aminoAcidDictionary(list1)
+    dict_2=aminoAcidDictionary(list2)
+    for i in dict_1:
+        if i not in gene:
+            gene.append(i)
+    for j in dict_2:
+        if j not in gene:
+            gene.append(j)
+    gene.sort()
+    return gene
 
 '''
 setupChartData(labels, proteinList)
@@ -189,8 +258,15 @@ Parameters: list of strs ; 2D list of strs
 Returns: list of floats
 '''
 def setupChartData(labels, proteinList):
-    return
-
+    list1=combineProteins(proteinList)
+    dict_1=aminoAcidDictionary(list1)
+    gene=[]
+    for i in labels:
+        if i in dict_1:
+            gene.append(dict_1[i]/len(list1))
+        else:
+            gene.append(0)
+    return gene
 
 '''
 createChart(xLabels, freqList1, label1, freqList2, label2, edgeList=None)
@@ -200,8 +276,16 @@ Returns: None
 '''
 def createChart(xLabels, freqList1, label1, freqList2, label2, edgeList=None):
     import matplotlib.pyplot as plt
+    import numpy as np
+    w=0.4
+    xvalues=np.arange(len(xLabels))
+    plt.bar(xvalues,freqList1,width=-w,align='edge',label=label1,edgecolor=edgeList)
+    plt.bar(xvalues,freqList2,width=w,align='edge',label=label2,edgecolor=edgeList)
+    plt.xticks(ticks=list(range(len(xLabels))),labels=xLabels,rotation="horizontal")
+    plt.legend()
+    plt.title("Comparision of Frequencies")
+    plt.show()
     return
-
 
 '''
 makeEdgeList(labels, biggestDiffs)
@@ -210,8 +294,16 @@ Parameters: list of strs ; 2D list of values
 Returns: list of strs
 '''
 def makeEdgeList(labels, biggestDiffs):
-    return
-
+    edgelst=[]
+    words=[]
+    for i in range(len(biggestDiffs)):
+        words.append(biggestDiffs[i][0])
+    for i in range(len(labels)):
+        if labels[i] in words:
+            edgelst.append("black")
+        else:
+            edgelst.append("white")
+    return edgelst
 
 '''
 runFullProgram()
@@ -235,14 +327,21 @@ if __name__ == "__main__":
     # test.testDnaToRna()
     # test.testMakeCodonDictionary()
     # test.testSynthesizeProteins()
-    test.testCommonProteins()
+    # test.testCommonProteins()
+    # test.testCombineProteins()
+    # test.testAminoAcidDictionary()
+    # test.testFindAminoAcidDifferences()
+    # test.testMakeAminoAcidLabels()
+    # test.testSetupChartData()
+    # test.testCreateChart()
+    test.testMakeEdgeList() 
     ## Uncomment these for Week 2 ##
-    """
-    print("\n" + "#"*15 + " WEEK 2 TESTS " +  "#" * 16 + "\n")
-    test.week2Tests()
-    print("\n" + "#"*15 + " WEEK 2 OUTPUT " + "#" * 15 + "\n")
-    runWeek2()
-    """
+    
+    # print("\n" + "#"*15 + " WEEK 2 TESTS " +  "#" * 16 + "\n")
+    # test.week2Tests()
+    # print("\n" + "#"*15 + " WEEK 2 OUTPUT " + "#" * 15 + "\n")
+    # runWeek2()
+   
 
     ## Uncomment these for Week 3 ##
     """
