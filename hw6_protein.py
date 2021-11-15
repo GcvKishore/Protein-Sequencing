@@ -334,7 +334,7 @@ if __name__ == "__main__":
     # test.testMakeAminoAcidLabels()
     # test.testSetupChartData()
     # test.testCreateChart()
-    test.testMakeEdgeList() 
+    # test.testMakeEdgeList() 
     ## Uncomment these for Week 2 ##
     
     # print("\n" + "#"*15 + " WEEK 2 TESTS " +  "#" * 16 + "\n")
